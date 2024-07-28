@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import './Todo.css';
 
 function Todo() {
     const [todos, setTodos] = useState([]);
@@ -19,8 +18,8 @@ function Todo() {
         }
     }
 
-    console.log(todos)
-    console.log(todos.length !== 0 ? todos[0].id : null)
+    // console.log(todos)
+    // console.log(todos.length !== 0 ? todos[0].id : null)
 
     const handleDelete = (id) => {
         setTodos(todos.filter(todo => todo.id !== id));
