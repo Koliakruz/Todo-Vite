@@ -13,16 +13,17 @@ function Todo() {
     const handleFormSubmit = (e) => {
         e.preventDefault();
         if (newTodo.trim()) {
-            setTodos([...todos, { id: Math.random(), text: newTodo }])
+            const updatedTodos = [...todos, { id: Math.random(), text: newTodo }];
+            setTodos(updatedTodos)
             setNewTodo('');
+            //console.log(updatedTodos);
         }
     }
 
-    // console.log(todos)
-    // console.log(todos.length !== 0 ? todos[0].id : null)
-
     const handleDelete = (id) => {
-        setTodos(todos.filter(todo => todo.id !== id));
+        const updatedTodos = todos.filter(todo => todo.id !== id)
+        setTodos(updatedTodos);
+        //console.log(updatedTodos);
     }
 
     const handleEdit = (id) => {
@@ -37,9 +38,11 @@ function Todo() {
 
     const handleEditSubmit = (e) => {
         e.preventDefault();
-        setTodos(todos.map(todo => (todo.id === editingTodo ? { ...todo, text: editingText } : todo)))
+        const updatedTodos = todos.map(todo => (todo.id === editingTodo ? { ...todo, text: editingText } : todo))
+        setTodos(updatedTodos)
         setEditingTodo(null);
         setEditingText('');
+        //console.log(updatedTodos);
     }
 
     return (
@@ -81,3 +84,7 @@ function Todo() {
 }
 
 export default Todo;
+
+
+// console.log(todos)
+// console.log(todos.length !== 0 ? todos[0].id : null)
