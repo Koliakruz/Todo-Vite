@@ -6,6 +6,7 @@ function Todo() {
     const [editingTodo, setEditingTodo] = useState(null)
     const [editingText, setEditingText] = useState('')
     const [errorMessage, setErrorMessage] = useState('');
+    const [filter, setFilter] = useState('all')
 
     const handleInputChange = (e) => {
         setNewTodo(e.target.value);
@@ -47,13 +48,22 @@ function Todo() {
         } else {
             setErrorMessage('Поле не може бути порожнім')
         }
-
     }
 
     const toggleComplete = (id) => {
         const updatedTodos = todos.map(todo => (todo.id === id ? { ...todo, completed: !todo.completed } : todo));
         setTodos(updatedTodos);
     }
+
+    const filteredTodos = todos.filter(todo => {
+        if (filter === 'completed') return todo.completed;
+        if (filter === 'inProgress') return !todo.completed;
+        return true;
+    })
+
+    const allCount = todos.length;
+    const inProgressCount = todos.filter(todo => !todo.completed).length
+    const completedCount = todos.filter(todo => todo.completed).length
 
     return (
         <div className="todo">
@@ -68,7 +78,7 @@ function Todo() {
                 <button type="submit">Add Task</button>
             </form>
             <ul>
-                {todos.map(todo => (
+                {filteredTodos.map(todo => (
                     <li key={todo.id} className={`todo-item ${todo.completed ? 'completed' : ''}`}>
                         {editingTodo === todo.id ? (
                             <form onSubmit={handleEditSubmit} className="edit-form">
@@ -96,6 +106,17 @@ function Todo() {
                     </li>
                 ))}
             </ul>
+            <div className="filters">
+                <span
+                    className={`filter ${filter === 'all' ? 'active' : ''}`}
+                    onClick={() => setFilter('all')}> All ({allCount}) </span>
+                <span
+                    className={`filter ${filter === 'inProgress' ? 'active' : ''}`}
+                    onClick={() => setFilter('inProgress')}> In Progress ({inProgressCount}) </span>
+                <span
+                    className={`filter ${filter === 'completed' ? 'active' : ''}`}
+                    onClick={() => setFilter('completed')}> Completed ({completedCount})</span>
+            </div>
         </div>
     )
 }
