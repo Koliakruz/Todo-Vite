@@ -7,6 +7,8 @@ function Todo() {
     const [editingText, setEditingText] = useState('')
     const [errorMessage, setErrorMessage] = useState('');
     const [filter, setFilter] = useState('all')
+    const [currentPage, setCurrentPage] = useState('1')
+    const itemsPerPage = 5;
 
     const handleInputChange = (e) => {
         setNewTodo(e.target.value);
@@ -18,6 +20,9 @@ function Todo() {
             const updatedTodos = [...todos, { id: Math.random(), text: newTodo, completed: false }];
             setTodos(updatedTodos)
             setNewTodo('');
+            setErrorMessage('');
+        } else {
+            setErrorMessage('The field cannot be empty')
         }
     }
 
@@ -46,7 +51,7 @@ function Todo() {
             setEditingText('');
             setErrorMessage('');
         } else {
-            setErrorMessage('Поле не може бути порожнім')
+            setErrorMessage('The field cannot be empty')
         }
     }
 
@@ -65,12 +70,36 @@ function Todo() {
     const inProgressCount = todos.filter(todo => !todo.completed).length
     const completedCount = todos.filter(todo => todo.completed).length
 
+    const indexOfLastTodo = currentPage * itemsPerPage;
+    const indexOfFirstTodo = indexOfLastTodo - itemsPerPage;
+    const currentTodos = filteredTodos.slice(indexOfFirstTodo, indexOfLastTodo)
+
+    const pageNumbers = [];
+    for (let i = 1; i <= Math.ceil(filteredTodos.length / itemsPerPage); i++) {
+        pageNumbers.push(i);
+    }
+
+    const handlePageClick = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    }
+
     return (
         <div className="todo">
-            <form onSubmit={handleFormSubmit}>
+            <div className="filters">
+                <span
+                    className={`filter ${filter === 'all' ? 'active' : ''}`}
+                    onClick={() => setFilter('all')}> All ({allCount}) </span>
+                <span
+                    className={`filter ${filter === 'inProgress' ? 'active' : ''}`}
+                    onClick={() => setFilter('inProgress')}> In Progress ({inProgressCount}) </span>
+                <span
+                    className={`filter ${filter === 'completed' ? 'active' : ''}`}
+                    onClick={() => setFilter('completed')}> Completed ({completedCount})</span>
+            </div>
+            <form onSubmit={handleFormSubmit} className="submit-form">
                 <input
                     type="text"
-                    placeholder="Add a new task"
+                    placeholder={errorMessage ? errorMessage : "Add a new task"}
                     value={newTodo}
                     onChange={handleInputChange}
                     className={errorMessage ? 'error' : ''}
@@ -78,7 +107,7 @@ function Todo() {
                 <button type="submit">Add Task</button>
             </form>
             <ul>
-                {filteredTodos.map(todo => (
+                {currentTodos.map(todo => (
                     <li key={todo.id} className={`todo-item ${todo.completed ? 'completed' : ''}`}>
                         {editingTodo === todo.id ? (
                             <form onSubmit={handleEditSubmit} className="edit-form">
@@ -106,21 +135,19 @@ function Todo() {
                     </li>
                 ))}
             </ul>
-            <div className="filters">
-                <span
-                    className={`filter ${filter === 'all' ? 'active' : ''}`}
-                    onClick={() => setFilter('all')}> All ({allCount}) </span>
-                <span
-                    className={`filter ${filter === 'inProgress' ? 'active' : ''}`}
-                    onClick={() => setFilter('inProgress')}> In Progress ({inProgressCount}) </span>
-                <span
-                    className={`filter ${filter === 'completed' ? 'active' : ''}`}
-                    onClick={() => setFilter('completed')}> Completed ({completedCount})</span>
+
+            <div className="pagination">
+                {pageNumbers.map(number => (
+                    <span
+                        key={number}
+                        className={`page-number ${currentPage === number ? 'active' : ''}`}
+                        onClick={() => handlePageClick(number)} >
+                        {number}
+                    </span>
+                ))}
             </div>
         </div>
     )
 }
 
 export default Todo;
-
-// console.log(todos.length !== 0 ? todos[0].id : null)
