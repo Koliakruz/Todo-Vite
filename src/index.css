@@ -177,14 +177,15 @@ ul {
   margin-top: 20px;
 }
 
-.page-number {
+.page-item {
   cursor: pointer;
   padding: 5px 10px;
   border: 1px solid #007bff;
+  border-radius: 4px;
   color: #007bff;
 }
 
-.page-number.active {
+.page-item.active {
   background-color: #007bff;
-  color: #fff;
+  color: white;
 }

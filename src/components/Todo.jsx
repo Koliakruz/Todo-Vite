@@ -20,6 +20,9 @@ function Todo() {
             const updatedTodos = [...todos, { id: Math.random(), text: newTodo, completed: false }];
             setTodos(updatedTodos)
             setNewTodo('');
+            if (updatedTodos.length > itemsPerPage) {
+                setCurrentPage(1);
+            }
             setErrorMessage('');
         } else {
             setErrorMessage('The field cannot be empty')
@@ -66,10 +69,6 @@ function Todo() {
         return true;
     })
 
-    const allCount = todos.length;
-    const inProgressCount = todos.filter(todo => !todo.completed).length
-    const completedCount = todos.filter(todo => todo.completed).length
-
     const indexOfLastTodo = currentPage * itemsPerPage;
     const indexOfFirstTodo = indexOfLastTodo - itemsPerPage;
     const currentTodos = filteredTodos.slice(indexOfFirstTodo, indexOfLastTodo)
@@ -79,22 +78,17 @@ function Todo() {
         pageNumbers.push(i);
     }
 
-    const handlePageClick = (pageNumber) => {
-        setCurrentPage(pageNumber);
+    const handleFilterChange = (newFilter) => {
+        setFilter(newFilter);
+        setCurrentPage(1);
     }
 
     return (
         <div className="todo">
             <div className="filters">
-                <span
-                    className={`filter ${filter === 'all' ? 'active' : ''}`}
-                    onClick={() => setFilter('all')}> All ({allCount}) </span>
-                <span
-                    className={`filter ${filter === 'inProgress' ? 'active' : ''}`}
-                    onClick={() => setFilter('inProgress')}> In Progress ({inProgressCount}) </span>
-                <span
-                    className={`filter ${filter === 'completed' ? 'active' : ''}`}
-                    onClick={() => setFilter('completed')}> Completed ({completedCount})</span>
+                <span className={`filter ${filter === 'all' ? 'active' : ''}`} onClick={() => handleFilterChange('all')}>All ({todos.length})</span>
+                <span className={`filter ${filter === 'inProgress' ? 'active' : ''}`} onClick={() => handleFilterChange('inProgress')}>In Progress ({todos.filter(todo => !todo.completed).length})</span>
+                <span className={`filter ${filter === 'completed' ? 'active' : ''}`} onClick={() => handleFilterChange('completed')}>Completed ({todos.filter(todo => todo.completed).length})</span>
             </div>
             <form onSubmit={handleFormSubmit} className="submit-form">
                 <input
@@ -135,17 +129,18 @@ function Todo() {
                     </li>
                 ))}
             </ul>
-
-            <div className="pagination">
-                {pageNumbers.map(number => (
-                    <span
-                        key={number}
-                        className={`page-number ${currentPage === number ? 'active' : ''}`}
-                        onClick={() => handlePageClick(number)} >
-                        {number}
-                    </span>
-                ))}
-            </div>
+            {filteredTodos.length > itemsPerPage && (
+                <div className="pagination">
+                    {pageNumbers.map(number => (
+                        <span
+                            key={number}
+                            className={`page-item ${currentPage === number ? 'active' : ''}`}
+                            onClick={() => setCurrentPage(number)}>
+                            {number}
+                        </span>
+                    ))}
+                </div>
+            )}
         </div>
     )
 }
