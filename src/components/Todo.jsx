@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from "react";
+import TodoList from "./TodoList";
+import Pagination from "./Pagination";
+import Filter from "./Filter";
+import TodoForm from "../components/TodoForm"
 
 function Todo() {
     const [todos, setTodos] = useState([]);
@@ -10,20 +14,15 @@ function Todo() {
     const [currentPage, setCurrentPage] = useState('1')
     const itemsPerPage = 5;
 
-    const handleInputChange = (e) => {
-        setNewTodo(e.target.value);
-    }
-
-    const handleFormSubmit = (e) => {
-        e.preventDefault();
+    const handleFormSubmit = (newTodo) => {
         if (newTodo.trim()) {
             const updatedTodos = [...todos, { id: Math.random(), text: newTodo, completed: false }];
             setTodos(updatedTodos)
             setNewTodo('');
+            setErrorMessage('');
             if (updatedTodos.length > itemsPerPage) {
                 setCurrentPage(1);
             }
-            setErrorMessage('');
         } else {
             setErrorMessage('The field cannot be empty')
         }
@@ -34,20 +33,15 @@ function Todo() {
         setTodos(updatedTodos);
     }
 
-    const handleEdit = (id) => {
-        const todoToEdit = todos.find(todo => todo.id === id)
+    const handleEdit = (id, text) => {
         setEditingTodo(id);
-        setEditingText(todoToEdit.text);
+        setEditingText(text);
         setErrorMessage('');
     }
 
-    const handleEditChange = (e) => {
-        setEditingText(e.target.value);
-    }
-
-    const handleEditSubmit = (e) => {
-        e.preventDefault();
-        if (editingText.trim()) {
+    const handleEditSubmit = (text) => {
+        ;
+        if (text.trim()) {
             const updatedTodos = todos.map(todo => (todo.id === editingTodo ? { ...todo, text: editingText } : todo))
             setTodos(updatedTodos)
             setEditingTodo(null);
@@ -91,61 +85,35 @@ function Todo() {
 
     return (
         <div className="todo">
-            <div className="filters">
-                <span className={`filter ${filter === 'all' ? 'active' : ''}`} onClick={() => handleFilterChange('all')}>All ({todos.length})</span>
-                <span className={`filter ${filter === 'inProgress' ? 'active' : ''}`} onClick={() => handleFilterChange('inProgress')}>In Progress ({todos.filter(todo => !todo.completed).length})</span>
-                <span className={`filter ${filter === 'completed' ? 'active' : ''}`} onClick={() => handleFilterChange('completed')}>Completed ({todos.filter(todo => todo.completed).length})</span>
-            </div>
-            <form onSubmit={handleFormSubmit} className="submit-form">
-                <input
-                    type="text"
-                    placeholder={errorMessage ? errorMessage : "Add a new task"}
-                    value={newTodo}
-                    onChange={handleInputChange}
-                    className={errorMessage ? 'error' : ''}
-                />
-                <button type="submit">Add Task</button>
-            </form>
-            <ul>
-                {currentTodos.map(todo => (
-                    <li key={todo.id} className={`todo-item ${todo.completed ? 'completed' : ''}`}>
-                        {editingTodo === todo.id ? (
-                            <form onSubmit={handleEditSubmit} className="edit-form">
-                                <input
-                                    type="text"
-                                    placeholder={errorMessage ? errorMessage : "Edit text"}
-                                    value={editingText}
-                                    onChange={handleEditChange}
-                                    className={errorMessage ? 'error' : ''}
-                                />
-                                <button type="submit">Save</button>
-                            </form>
-                        ) : (
-                            <>
-                                <input className="checkbox"
-                                    type="checkbox"
-                                    checked={todo.completed}
-                                    onChange={() => toggleComplete(todo.id)}
-                                />
-                                <span className="todo-text">{todo.text}</span>
-                                <button onClick={() => handleEdit(todo.id)} className="edit-button">Edit</button>
-                                <button onClick={() => handleDelete(todo.id)} className="delete-button">Delete</button>
-                            </>
-                        )}
-                    </li>
-                ))}
-            </ul>
+            <Filter
+                filter={filter}
+                todos={todos}
+                onFilterChange={handleFilterChange}
+            />
+            <TodoForm
+                newTodo={newTodo}
+                setNewtodo={setNewTodo}
+                errorMessage={errorMessage}
+                handleFormSubmit={handleFormSubmit}
+                setErrorMessage={setErrorMessage}
+            />
+            <TodoList
+                todos={currentTodos}
+                editingTodo={editingTodo}
+                editingText={editingText}
+                errorMessage={errorMessage}
+                handleEditSubmit={handleEditSubmit}
+                handleEdit={handleEdit}
+                handleDelete={handleDelete}
+                toggleComplete={toggleComplete}
+            />
             {filteredTodos.length > itemsPerPage && (
-                <div className="pagination">
-                    {pageNumbers.map(number => (
-                        <span
-                            key={number}
-                            className={`page-item ${currentPage === number ? 'active' : ''}`}
-                            onClick={() => setCurrentPage(number)}>
-                            {number}
-                        </span>
-                    ))}
-                </div>
+                <Pagination
+                    currentPage={currentPage}
+                    itemsPerPage={itemsPerPage}
+                    totalItems={filteredTodos.length}
+                    setCurrentPage={setCurrentPage}
+                />
             )}
         </div>
     )
