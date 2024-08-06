@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 function Todo() {
     const [todos, setTodos] = useState([]);
@@ -68,6 +68,12 @@ function Todo() {
         if (filter === 'inProgress') return !todo.completed;
         return true;
     })
+
+    useEffect(() => {
+        if (currentPage > Math.ceil(filteredTodos.length / itemsPerPage)) {
+            setCurrentPage(Math.max(1, Math.ceil(filteredTodos.length / itemsPerPage)))
+        }
+    }, [filteredTodos, currentPage]);
 
     const indexOfLastTodo = currentPage * itemsPerPage;
     const indexOfFirstTodo = indexOfLastTodo - itemsPerPage;
