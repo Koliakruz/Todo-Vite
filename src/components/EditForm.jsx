@@ -1,13 +1,10 @@
 import React from "react";
 import './componentsStyle/editForm.css'
 
-function EditForm({ editingText, errorMessage, handleEditChange, handleEditSubmit }) {
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        handleEditSubmit(editingText);
-    }
+function EditForm({ handleEditSubmit, handleEditChange, editingText, errorMessage }) {
+
     return (
-        <form onSubmit={handleSubmit} className="edit-form">
+        <form onSubmit={handleEditSubmit} className="edit-form">
             <input
                 type="text"
                 placeholder={errorMessage ? errorMessage : "Edit text"}

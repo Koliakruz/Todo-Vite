@@ -1,10 +1,10 @@
 import React from "react";
 import './componentsStyle/pagination.css'
 
-function Pagination({ currentPage, itemsPerPage, totalItems, setCurrentPage }) {
+function Pagination({ todosLength, itemsPerPage, currentPage, setCurrentPage }) {
 
     const pageNumbers = [];
-    for (let i = 1; i <= Math.ceil(totalItems / itemsPerPage); i++) {
+    for (let i = 1; i <= Math.ceil(todosLength / itemsPerPage); i++) {
         pageNumbers.push(i);
     }
 

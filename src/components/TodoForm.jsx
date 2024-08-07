@@ -1,19 +1,15 @@
 import React from "react";
 import './componentsStyle/todoForm.css'
 
-function TodoForm({ newTodo, setNewtodo, errorMessage, handleFormSubmit }) {
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        handleFormSubmit(newTodo);
-    }
+function TodoForm({ handleFormSubmit, handleInputChange, newTodo, errorMessage }) {
 
     return (
-        <form onSubmit={handleSubmit} className="submit-form">
+        <form onSubmit={handleFormSubmit} className="submit-form">
             <input
                 type="text"
                 placeholder={errorMessage ? errorMessage : "Add a new task"}
                 value={newTodo}
-                onChange={(e) => setNewtodo(e.target.value)}
+                onChange={handleInputChange}
                 className={errorMessage ? 'error' : ''}
             />
             <button type="submit">Add Task</button>

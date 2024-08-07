@@ -15,42 +15,54 @@ function Todo() {
     const [currentPage, setCurrentPage] = useState('1')
     const itemsPerPage = 5;
 
-    const handleFormSubmit = (newTodo) => {
+    const handleInputChange = (e) => {
+        setNewTodo(e.target.value);
+    };
+
+    const handleFormSubmit = (e) => {
+        e.preventDefault();
         if (newTodo.trim()) {
             const updatedTodos = [...todos, { id: Math.random(), text: newTodo, completed: false }];
             setTodos(updatedTodos)
             setNewTodo('');
             setErrorMessage('');
-            if (updatedTodos.length > itemsPerPage) {
-                setCurrentPage(1);
-            }
+            setCurrentPage(Math.ceil(updatedTodos.length / itemsPerPage));
         } else {
             setErrorMessage('The field cannot be empty')
         }
     }
 
     const handleDelete = (id) => {
-        const updatedTodos = todos.filter(todo => todo.id !== id)
+        const updatedTodos = todos.filter(todo => todo.id !== id);
         setTodos(updatedTodos);
-    }
+        if (currentPage > Math.ceil(updatedTodos.length / itemsPerPage)) {
+            setCurrentPage(Math.ceil(updatedTodos.length / itemsPerPage));
+        }
+    };
 
-    const handleEdit = (id, text) => {
+    const handleEdit = (id) => {
+        const todoToEdit = todos.find(todo => todo.id === id);
         setEditingTodo(id);
-        setEditingText(text);
+        setEditingText(todoToEdit.text);
         setErrorMessage('');
-    }
+    };
 
-    const handleEditSubmit = (text) => {
-        if (text.trim()) {
-            const updatedTodos = todos.map(todo => (todo.id === editingTodo ? { ...todo, text: editingText } : todo))
-            setTodos(updatedTodos)
+    const handleEditChange = (e) => {
+        setEditingText(e.target.value);
+    };
+
+    const handleEditSubmit = (e) => {
+        e.preventDefault(e);
+        if (editingText.trim()) {
+            const updatedTodos = todos.map(todo => (todo.id === editingTodo ? { ...todo, text: editingText } : todo));
+            setTodos(updatedTodos);
             setEditingTodo(null);
             setEditingText('');
             setErrorMessage('');
         } else {
-            setErrorMessage('The field cannot be empty')
+            setErrorMessage('The field cannot be empty');
         }
-    }
+    };
 
     const toggleComplete = (id) => {
         const updatedTodos = todos.map(todo => (todo.id === id ? { ...todo, completed: !todo.completed } : todo));
@@ -83,20 +95,20 @@ function Todo() {
             <Filter
                 filter={filter}
                 todos={todos}
-                onFilterChange={handleFilterChange}
+                handleFilterChange={handleFilterChange}
             />
             <TodoForm
-                newTodo={newTodo}
-                setNewtodo={setNewTodo}
-                errorMessage={errorMessage}
                 handleFormSubmit={handleFormSubmit}
-                setErrorMessage={setErrorMessage}
+                handleInputChange={handleInputChange}
+                newTodo={newTodo}
+                errorMessage={errorMessage}
             />
             <TodoList
-                todos={currentTodos}
+                currentTodos={currentTodos}
                 editingTodo={editingTodo}
                 editingText={editingText}
                 errorMessage={errorMessage}
+                handleEditChange={handleEditChange}
                 handleEditSubmit={handleEditSubmit}
                 handleEdit={handleEdit}
                 handleDelete={handleDelete}
@@ -104,9 +116,9 @@ function Todo() {
             />
             {filteredTodos.length > itemsPerPage && (
                 <Pagination
-                    currentPage={currentPage}
+                    todosLength={filteredTodos.length}
                     itemsPerPage={itemsPerPage}
-                    totalItems={filteredTodos.length}
+                    currentPage={currentPage}
                     setCurrentPage={setCurrentPage}
                 />
             )}
