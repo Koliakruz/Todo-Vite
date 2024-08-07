@@ -4,6 +4,7 @@ import Pagination from "./Pagination";
 import Filter from "./Filter";
 import TodoForm from "../components/TodoForm"
 import './componentsStyle/todo.css'
+import { v4 as uuidv4 } from 'uuid';
 
 function Todo() {
     const [todos, setTodos] = useState([]);
@@ -22,7 +23,7 @@ function Todo() {
     const handleFormSubmit = (e) => {
         e.preventDefault();
         if (newTodo.trim()) {
-            const updatedTodos = [...todos, { id: Math.random(), text: newTodo, completed: false }];
+            const updatedTodos = [...todos, { id: uuidv4(), text: newTodo, completed: false }];
             setTodos(updatedTodos)
             setNewTodo('');
             setErrorMessage('');
