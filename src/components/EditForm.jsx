@@ -1,4 +1,5 @@
 import React from "react";
+import './componentsStyle/editForm.css'
 
 function EditForm({ editingText, errorMessage, handleEditChange, handleEditSubmit }) {
     const handleSubmit = (e) => {

@@ -1,4 +1,5 @@
 import React from "react";
+import './componentsStyle/filter.css'
 
 function Filter({ filter, todos, onFilterChange }) {
     return (

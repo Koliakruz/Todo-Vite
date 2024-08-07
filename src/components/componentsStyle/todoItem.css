@@ -1,0 +1,77 @@
+.todo-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.todo-item.completed .todo-text {
+    text-decoration: line-through;
+    color: grey;
+}
+
+.todo-item:not(.completed) .checkbox {
+    display: inline-block;
+}
+
+.todo-text {
+    flex: 1;
+    max-width: 70%;
+    word-wrap: break-word;
+    cursor: pointer;
+}
+
+input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    appearance: none;
+    background-color: #fff;
+    border: 2px solid #007bff;
+    border-radius: 5px;
+    outline: none;
+    position: relative;
+    margin-right: 5px;
+}
+
+input[type="checkbox"]:checked {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+input[type="checkbox"]:checked::after {
+    content: '✔';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: 15px;
+}
+
+.edit-button,
+.delete-button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #dc3545;
+    color: white;
+    cursor: pointer;
+}
+
+.edit-button {
+    background-color: #15b60c;
+    color: white;
+}
+
+.edit-button:hover {
+    background-color: #195904;
+}
+
+.delete-button:hover {
+    background-color: #a41927;
+}

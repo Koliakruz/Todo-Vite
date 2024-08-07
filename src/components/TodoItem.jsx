@@ -1,5 +1,6 @@
 import React from "react";
 import EditForm from "./EditForm";
+import './componentsStyle/todoItem.css'
 
 function TodoItem({ todo, editingTodo, editingText, errorMessage, handleEditSubmit, handleEdit, handleDelete, toggleComplete }) {
     return (

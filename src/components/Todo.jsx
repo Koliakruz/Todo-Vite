@@ -3,6 +3,7 @@ import TodoList from "./TodoList";
 import Pagination from "./Pagination";
 import Filter from "./Filter";
 import TodoForm from "../components/TodoForm"
+import './componentsStyle/todo.css'
 
 function Todo() {
     const [todos, setTodos] = useState([]);
@@ -40,7 +41,6 @@ function Todo() {
     }
 
     const handleEditSubmit = (text) => {
-        ;
         if (text.trim()) {
             const updatedTodos = todos.map(todo => (todo.id === editingTodo ? { ...todo, text: editingText } : todo))
             setTodos(updatedTodos)
@@ -72,11 +72,6 @@ function Todo() {
     const indexOfLastTodo = currentPage * itemsPerPage;
     const indexOfFirstTodo = indexOfLastTodo - itemsPerPage;
     const currentTodos = filteredTodos.slice(indexOfFirstTodo, indexOfLastTodo)
-
-    const pageNumbers = [];
-    for (let i = 1; i <= Math.ceil(filteredTodos.length / itemsPerPage); i++) {
-        pageNumbers.push(i);
-    }
 
     const handleFilterChange = (newFilter) => {
         setFilter(newFilter);
