@@ -1,7 +1,13 @@
 import React from "react";
 import './componentsStyle/filter.css'
 
-function Filter({ filter, todos, handleFilterChange }) {
+function Filter({ filter, todos, setFilter, setCurrentPage }) {
+
+    const handleFilterChange = (newFilter) => {
+        setFilter(newFilter);
+        setCurrentPage(1);
+    }
+
     return (
         <div className="filters">
             <span className={`filter ${filter === 'all' ? 'active' : ''}`} onClick={() => handleFilterChange('all')}>All ({todos.length})</span>

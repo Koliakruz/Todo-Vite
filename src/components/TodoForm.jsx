@@ -1,7 +1,11 @@
 import React from "react";
 import './componentsStyle/todoForm.css'
 
-function TodoForm({ handleFormSubmit, handleInputChange, newTodo, errorMessage }) {
+function TodoForm({ handleFormSubmit, setNewTodo, newTodo, errorMessage }) {
+
+    const handleInputChange = (e) => {
+        setNewTodo(e.target.value);
+    };
 
     return (
         <form onSubmit={handleFormSubmit} className="submit-form">

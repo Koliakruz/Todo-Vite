@@ -2,15 +2,9 @@ import React from "react";
 import EditForm from "./EditForm";
 import './componentsStyle/todoItem.css'
 
-function TodoItem({ todo,
-    handleEdit,
-    handleDelete,
-    handleEditSubmit,
-    handleEditChange,
-    editingTodo,
-    editingText,
-    errorMessage,
-    toggleComplete }) {
+function TodoItem({ todo, handleEdit, handleDelete, handleEditSubmit, handleEditChange, editingTodo, editingText,
+    errorMessage, toggleComplete }) {
+
     return (
         <li className={`todo-item ${todo.completed ? 'completed' : ''}`}>
             {editingTodo === todo.id ? (

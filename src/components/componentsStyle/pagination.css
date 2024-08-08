@@ -1,15 +1,18 @@
 .pagination {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
     margin-top: 20px;
+    justify-content: center;
 }
 
 .page-item {
     cursor: pointer;
-    padding: 5px 10px;
-    border: 1px solid #007bff;
+    padding: 10px;
+    border: 2px solid #007bff;
     border-radius: 4px;
     color: #007bff;
+    user-select: none;
 }
 
 .page-item.active {

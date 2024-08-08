@@ -1,15 +1,8 @@
 import React from "react";
 import TodoItem from "./TodoItem";
 
-function TodoList({ currentTodos,
-    editingTodo,
-    editingText,
-    errorMessage,
-    handleEditChange,
-    handleEditSubmit,
-    handleEdit,
-    handleDelete,
-    toggleComplete, }) {
+function TodoList({ currentTodos, editingTodo, editingText, errorMessage, handleEditChange, handleEditSubmit, handleEdit,
+    handleDelete, toggleComplete }) {
     return (
         <ul>
             {currentTodos.map(todo => (
@@ -29,7 +22,5 @@ function TodoList({ currentTodos,
         </ul>
     )
 }
-
-
 
 export default TodoList;

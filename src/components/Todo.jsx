@@ -16,9 +16,19 @@ function Todo() {
     const [currentPage, setCurrentPage] = useState('1')
     const itemsPerPage = 5;
 
-    const handleInputChange = (e) => {
-        setNewTodo(e.target.value);
-    };
+    useEffect(() => {
+        const fetchTodos = async () => {
+            const responce = await fetch('https://jsonplaceholder.typicode.com/todos');
+            const data = await responce.json();
+            const mappedTodos = data.map(todo => ({
+                id: uuidv4(),
+                text: todo.title,
+                completed: todo.completed
+            }));
+            setTodos(mappedTodos);
+        }
+        fetchTodos();
+    }, []);
 
     const handleFormSubmit = (e) => {
         e.preventDefault();
@@ -86,21 +96,17 @@ function Todo() {
     const indexOfFirstTodo = indexOfLastTodo - itemsPerPage;
     const currentTodos = filteredTodos.slice(indexOfFirstTodo, indexOfLastTodo)
 
-    const handleFilterChange = (newFilter) => {
-        setFilter(newFilter);
-        setCurrentPage(1);
-    }
-
     return (
         <div className="todo">
             <Filter
                 filter={filter}
                 todos={todos}
-                handleFilterChange={handleFilterChange}
+                setFilter={setFilter}
+                setCurrentPage={setCurrentPage}
             />
             <TodoForm
+                setNewTodo={setNewTodo}
                 handleFormSubmit={handleFormSubmit}
-                handleInputChange={handleInputChange}
                 newTodo={newTodo}
                 errorMessage={errorMessage}
             />
