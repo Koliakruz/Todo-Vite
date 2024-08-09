@@ -3,7 +3,7 @@ import EditForm from "./EditForm";
 import './componentsStyle/todoItem.css'
 
 function TodoItem({ todo, handleEdit, handleDelete, handleEditSubmit, handleEditChange, editingTodo, editingText,
-    errorMessage, toggleComplete }) {
+    editErrorMessage, toggleComplete }) {
 
     return (
         <li className={`todo-item ${todo.completed ? 'completed' : ''}`}>
@@ -12,7 +12,7 @@ function TodoItem({ todo, handleEdit, handleDelete, handleEditSubmit, handleEdit
                     handleEditSubmit={handleEditSubmit}
                     handleEditChange={handleEditChange}
                     editingText={editingText}
-                    errorMessage={errorMessage}
+                    editErrorMessage={editErrorMessage}
                 />
             ) : (
                 <>

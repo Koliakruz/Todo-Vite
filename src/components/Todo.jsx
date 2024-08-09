@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import TodoList from "./TodoList";
 import Pagination from "./Pagination";
 import Filter from "./Filter";
-import TodoForm from "../components/TodoForm"
-import './componentsStyle/todo.css'
+import TodoForm from "../components/TodoForm";
+import './componentsStyle/todo.css';
 import { v4 as uuidv4 } from 'uuid';
 
 function Todo() {
@@ -11,7 +11,8 @@ function Todo() {
     const [newTodo, setNewTodo] = useState('')
     const [editingTodo, setEditingTodo] = useState(null)
     const [editingText, setEditingText] = useState('')
-    const [errorMessage, setErrorMessage] = useState('');
+    const [addErrorMessage, setAddErrorMessage] = useState('');
+    const [editErrorMessage, setEditErrorMessage] = useState('');
     const [filter, setFilter] = useState('all')
     const [currentPage, setCurrentPage] = useState('1')
     const itemsPerPage = 5;
@@ -36,10 +37,12 @@ function Todo() {
             const updatedTodos = [...todos, { id: uuidv4(), text: newTodo, completed: false }];
             setTodos(updatedTodos)
             setNewTodo('');
-            setErrorMessage('');
-            setCurrentPage(Math.ceil(updatedTodos.length / itemsPerPage));
+            setAddErrorMessage('');
+            if (updatedTodos.length > itemsPerPage) {
+                setCurrentPage(Math.ceil(updatedTodos.length / itemsPerPage));
+            }
         } else {
-            setErrorMessage('The field cannot be empty')
+            setAddErrorMessage('The field cannot be empty')
         }
     }
 
@@ -55,7 +58,7 @@ function Todo() {
         const todoToEdit = todos.find(todo => todo.id === id);
         setEditingTodo(id);
         setEditingText(todoToEdit.text);
-        setErrorMessage('');
+        setEditErrorMessage('');
     };
 
     const handleEditChange = (e) => {
@@ -69,9 +72,9 @@ function Todo() {
             setTodos(updatedTodos);
             setEditingTodo(null);
             setEditingText('');
-            setErrorMessage('');
+            setEditErrorMessage('');
         } else {
-            setErrorMessage('The field cannot be empty');
+            setEditErrorMessage('The field cannot be empty');
         }
     };
 
@@ -108,13 +111,13 @@ function Todo() {
                 setNewTodo={setNewTodo}
                 handleFormSubmit={handleFormSubmit}
                 newTodo={newTodo}
-                errorMessage={errorMessage}
+                addErrorMessage={addErrorMessage}
             />
             <TodoList
                 currentTodos={currentTodos}
                 editingTodo={editingTodo}
                 editingText={editingText}
-                errorMessage={errorMessage}
+                editErrorMessage={editErrorMessage}
                 handleEditChange={handleEditChange}
                 handleEditSubmit={handleEditSubmit}
                 handleEdit={handleEdit}

@@ -1,16 +1,16 @@
 import React from "react";
 import './componentsStyle/editForm.css'
 
-function EditForm({ handleEditSubmit, handleEditChange, editingText, errorMessage }) {
+function EditForm({ handleEditSubmit, handleEditChange, editingText, editErrorMessage }) {
 
     return (
         <form onSubmit={handleEditSubmit} className="edit-form">
             <input
                 type="text"
-                placeholder={errorMessage ? errorMessage : "Edit text"}
+                placeholder={editErrorMessage ? editErrorMessage : "Edit text"}
                 value={editingText}
                 onChange={handleEditChange}
-                className={errorMessage ? 'error' : ''}
+                className={editErrorMessage ? 'error' : ''}
             />
             <button type="submit">Save</button>
         </form>

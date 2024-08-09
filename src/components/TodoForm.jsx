@@ -1,7 +1,7 @@
 import React from "react";
 import './componentsStyle/todoForm.css'
 
-function TodoForm({ handleFormSubmit, setNewTodo, newTodo, errorMessage }) {
+function TodoForm({ handleFormSubmit, setNewTodo, newTodo, addErrorMessage }) {
 
     const handleInputChange = (e) => {
         setNewTodo(e.target.value);
@@ -11,10 +11,10 @@ function TodoForm({ handleFormSubmit, setNewTodo, newTodo, errorMessage }) {
         <form onSubmit={handleFormSubmit} className="submit-form">
             <input
                 type="text"
-                placeholder={errorMessage ? errorMessage : "Add a new task"}
+                placeholder={addErrorMessage ? addErrorMessage : "Add a new task"}
                 value={newTodo}
                 onChange={handleInputChange}
-                className={errorMessage ? 'error' : ''}
+                className={addErrorMessage ? 'error' : ''}
             />
             <button type="submit">Add Task</button>
         </form>

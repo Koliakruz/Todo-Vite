@@ -1,7 +1,7 @@
 import React from "react";
 import TodoItem from "./TodoItem";
 
-function TodoList({ currentTodos, editingTodo, editingText, errorMessage, handleEditChange, handleEditSubmit, handleEdit,
+function TodoList({ currentTodos, editingTodo, editingText, editErrorMessage, handleEditChange, handleEditSubmit, handleEdit,
     handleDelete, toggleComplete }) {
     return (
         <ul>
@@ -11,7 +11,7 @@ function TodoList({ currentTodos, editingTodo, editingText, errorMessage, handle
                     todo={todo}
                     editingTodo={editingTodo}
                     editingText={editingText}
-                    errorMessage={errorMessage}
+                    editErrorMessage={editErrorMessage}
                     handleEditChange={handleEditChange}
                     handleEditSubmit={handleEditSubmit}
                     handleEdit={handleEdit}
