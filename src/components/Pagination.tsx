@@ -1,9 +1,16 @@
 import React from "react";
 import './componentsStyle/pagination.css'
 
-function Pagination({ todosLength, itemsPerPage, currentPage, setCurrentPage }) {
+interface PaginationProps {
+    todosLength: number;
+    itemsPerPage: number;
+    currentPage: number;
+    setCurrentPage: (page: number) => void;
+}
 
-    const pageNumbers = [];
+const Pagination: React.FC<PaginationProps> = ({ todosLength, itemsPerPage, currentPage, setCurrentPage }) => {
+
+    const pageNumbers: number[] = [];
     for (let i = 1; i <= Math.ceil(todosLength / itemsPerPage); i++) {
         pageNumbers.push(i);
     }

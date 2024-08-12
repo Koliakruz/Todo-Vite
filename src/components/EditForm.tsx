@@ -1,7 +1,14 @@
-import React from "react";
+import React, { ChangeEvent, FormEvent } from "react";
 import './componentsStyle/editForm.css'
 
-function EditForm({ handleEditSubmit, handleEditChange, editingText, editErrorMessage }) {
+interface EditFormProps {
+    handleEditSubmit: (e: FormEvent<HTMLFormElement>) => void;
+    handleEditChange: (e: ChangeEvent<HTMLInputElement>) => void;
+    editingText: string;
+    editErrorMessage: string;
+}
+
+const EditForm: React.FC<EditFormProps> = ({ handleEditSubmit, handleEditChange, editingText, editErrorMessage }) => {
 
     return (
         <form onSubmit={handleEditSubmit} className="edit-form">

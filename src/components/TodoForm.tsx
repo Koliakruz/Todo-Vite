@@ -1,9 +1,16 @@
-import React from "react";
+import React, { ChangeEvent, FC } from "react";
 import './componentsStyle/todoForm.css'
 
-function TodoForm({ handleFormSubmit, setNewTodo, newTodo, addErrorMessage }) {
+interface TodoFormProps {
+    handleFormSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+    setNewTodo: (value: string) => void;
+    newTodo: string;
+    addErrorMessage: string;
+}
 
-    const handleInputChange = (e) => {
+const TodoForm: FC<TodoFormProps> = ({ handleFormSubmit, setNewTodo, newTodo, addErrorMessage }) => {
+
+    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setNewTodo(e.target.value);
     };
 

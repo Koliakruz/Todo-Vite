@@ -1,9 +1,16 @@
 import React from "react";
 import './componentsStyle/filter.css'
 
-function Filter({ filter, todos, setFilter, setCurrentPage }) {
+interface FilterProps {
+    filter: string;
+    todos: { id: string, text: string; completed: boolean }[];
+    setFilter: (filter: string) => void;
+    setCurrentPage: (page: number) => void;
+}
 
-    const handleFilterChange = (newFilter) => {
+const Filter: React.FC<FilterProps> = ({ filter, todos, setFilter, setCurrentPage }) => {
+
+    const handleFilterChange = (newFilter: string) => {
         setFilter(newFilter);
         setCurrentPage(1);
     }

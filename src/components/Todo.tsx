@@ -2,26 +2,32 @@ import React, { useEffect, useState } from "react";
 import TodoList from "./TodoList";
 import Pagination from "./Pagination";
 import Filter from "./Filter";
-import TodoForm from "../components/TodoForm";
+import TodoForm from "./TodoForm";
 import './componentsStyle/todo.css';
 import { v4 as uuidv4 } from 'uuid';
 
+interface TodoItem {
+    id: string;
+    text: string;
+    completed: boolean;
+}
+
 function Todo() {
-    const [todos, setTodos] = useState([]);
-    const [newTodo, setNewTodo] = useState('')
-    const [editingTodo, setEditingTodo] = useState(null)
-    const [editingText, setEditingText] = useState('')
-    const [addErrorMessage, setAddErrorMessage] = useState('');
-    const [editErrorMessage, setEditErrorMessage] = useState('');
-    const [filter, setFilter] = useState('all')
-    const [currentPage, setCurrentPage] = useState('1')
+    const [todos, setTodos] = useState<TodoItem[]>([]);
+    const [newTodo, setNewTodo] = useState<string>('')
+    const [editingTodo, setEditingTodo] = useState<string | null>(null)
+    const [editingText, setEditingText] = useState<string>('')
+    const [addErrorMessage, setAddErrorMessage] = useState<string>('');
+    const [editErrorMessage, setEditErrorMessage] = useState<string>('');
+    const [filter, setFilter] = useState<string>('all')
+    const [currentPage, setCurrentPage] = useState<number>(1)
     const itemsPerPage = 5;
 
     useEffect(() => {
         const fetchTodos = async () => {
             const responce = await fetch('https://jsonplaceholder.typicode.com/todos');
             const data = await responce.json();
-            const mappedTodos = data.map(todo => ({
+            const mappedTodos: TodoItem[] = data.map((todo: any) => ({
                 id: uuidv4(),
                 text: todo.title,
                 completed: todo.completed
@@ -31,7 +37,7 @@ function Todo() {
         fetchTodos();
     }, []);
 
-    const handleFormSubmit = (e) => {
+    const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (newTodo.trim()) {
             const updatedTodos = [...todos, { id: uuidv4(), text: newTodo, completed: false }];
@@ -46,7 +52,7 @@ function Todo() {
         }
     }
 
-    const handleDelete = (id) => {
+    const handleDelete = (id: string) => {
         const updatedTodos = todos.filter(todo => todo.id !== id);
         setTodos(updatedTodos);
         if (currentPage > Math.ceil(updatedTodos.length / itemsPerPage)) {
@@ -54,19 +60,21 @@ function Todo() {
         }
     };
 
-    const handleEdit = (id) => {
+    const handleEdit = (id: string) => {
         const todoToEdit = todos.find(todo => todo.id === id);
-        setEditingTodo(id);
-        setEditingText(todoToEdit.text);
-        setEditErrorMessage('');
+        if (todoToEdit) {
+            setEditingTodo(id);
+            setEditingText(todoToEdit.text);
+            setEditErrorMessage('');
+        }
     };
 
-    const handleEditChange = (e) => {
+    const handleEditChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEditingText(e.target.value);
     };
 
-    const handleEditSubmit = (e) => {
-        e.preventDefault(e);
+    const handleEditSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
         if (editingText.trim()) {
             const updatedTodos = todos.map(todo => (todo.id === editingTodo ? { ...todo, text: editingText } : todo));
             setTodos(updatedTodos);
@@ -78,7 +86,7 @@ function Todo() {
         }
     };
 
-    const toggleComplete = (id) => {
+    const toggleComplete = (id: string) => {
         const updatedTodos = todos.map(todo => (todo.id === id ? { ...todo, completed: !todo.completed } : todo));
         setTodos(updatedTodos);
     }

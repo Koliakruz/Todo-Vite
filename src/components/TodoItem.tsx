@@ -1,9 +1,21 @@
-import React from "react";
+import React, { FC } from "react";
 import EditForm from "./EditForm";
 import './componentsStyle/todoItem.css'
 
-function TodoItem({ todo, handleEdit, handleDelete, handleEditSubmit, handleEditChange, editingTodo, editingText,
-    editErrorMessage, toggleComplete }) {
+interface TodoItemProps {
+    todo: { id: string, text: string, completed: boolean };
+    handleEdit: (id: string) => void;
+    handleDelete: (id: string) => void;
+    handleEditSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+    handleEditChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    editingTodo: string | null;
+    editingText: string;
+    editErrorMessage: string;
+    toggleComplete: (id: string) => void;
+}
+
+const TodoItem: FC<TodoItemProps> = ({ todo, handleEdit, handleDelete, handleEditSubmit, handleEditChange, editingTodo, editingText,
+    editErrorMessage, toggleComplete }) => {
 
     return (
         <li className={`todo-item ${todo.completed ? 'completed' : ''}`}>
