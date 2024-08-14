@@ -44,9 +44,8 @@ function Todo() {
             setTodos(updatedTodos)
             setNewTodo('');
             setAddErrorMessage('');
-            if (updatedTodos.length > itemsPerPage) {
-                setCurrentPage(Math.ceil(updatedTodos.length / itemsPerPage));
-            }
+            setFilter('all');
+            setCurrentPage(Math.ceil(updatedTodos.length / itemsPerPage));
         } else {
             setAddErrorMessage('The field cannot be empty')
         }
