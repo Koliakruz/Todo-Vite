@@ -5,6 +5,7 @@ import Filter from "./Filter";
 import TodoForm from "./TodoForm";
 import './componentsStyle/todo.css';
 import { v4 as uuidv4 } from 'uuid';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface TodoItem {
     id: string;
@@ -22,6 +23,7 @@ function Todo() {
     const [filter, setFilter] = useState<string>('all')
     const [currentPage, setCurrentPage] = useState<number>(1)
     const itemsPerPage = 5;
+    const queryClient = useQueryClient();
 
     useEffect(() => {
         const fetchTodos = async () => {
@@ -37,15 +39,39 @@ function Todo() {
         fetchTodos();
     }, []);
 
-    const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (newTodo.trim()) {
-            const updatedTodos = [...todos, { id: uuidv4(), text: newTodo, completed: false }];
-            setTodos(updatedTodos)
+    const addTodoMutation = useMutation({
+        mutationFn: async (newTask: string) => {
+            const response = await fetch('https://jsonplaceholder.typicode.com/todos', {
+                method: 'POST',
+                body: JSON.stringify({
+                    title: newTask,
+                    completed: false,
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            return response.json();
+        },
+        onSuccess: (data) => {
+            const newTodo: TodoItem = {
+                id: uuidv4(),
+                text: data.title,
+                completed: data.completed,
+            };
+            setTodos((prevTodos) => [...prevTodos, newTodo]);
             setNewTodo('');
             setAddErrorMessage('');
             setFilter('all');
-            setCurrentPage(Math.ceil(updatedTodos.length / itemsPerPage));
+            setCurrentPage(Math.ceil((todos.length + 1) / itemsPerPage));
+            queryClient.invalidateQueries({ queryKey: ['todos'] });
+        },
+    });
+
+    const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (newTodo.trim()) {
+            addTodoMutation.mutate(newTodo);
         } else {
             setAddErrorMessage('The field cannot be empty')
         }
