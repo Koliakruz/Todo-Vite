@@ -46,7 +46,6 @@ function Todo() {
             const response = await fetch('https://66c8103c732bf1b79fa81b5e.mockapi.io/api/v1/todos', {
                 method: 'POST',
                 body: JSON.stringify({
-                    userId: 1,
                     title: newTask,
                     completed: false,
                 }),
