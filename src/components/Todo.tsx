@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import TodoList from "./TodoList";
 import Pagination from "./Pagination";
 import Filter from "./Filter";
 import TodoForm from "./TodoForm";
 import './componentsStyle/todo.css';
-import { v4 as uuidv4 } from 'uuid';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 interface TodoItem {
     id: string;
@@ -14,36 +13,40 @@ interface TodoItem {
 }
 
 function Todo() {
-    const [todos, setTodos] = useState<TodoItem[]>([]);
-    const [newTodo, setNewTodo] = useState<string>('')
-    const [editingTodo, setEditingTodo] = useState<string | null>(null)
-    const [editingText, setEditingText] = useState<string>('')
+    const [newTodo, setNewTodo] = useState<string>('');
+    const [editingTodo, setEditingTodo] = useState<string | null>(null);
+    const [editingText, setEditingText] = useState<string>('');
     const [addErrorMessage, setAddErrorMessage] = useState<string>('');
     const [editErrorMessage, setEditErrorMessage] = useState<string>('');
-    const [filter, setFilter] = useState<string>('all')
-    const [currentPage, setCurrentPage] = useState<number>(1)
+    const [filter, setFilter] = useState<string>('all');
+    const [currentPage, setCurrentPage] = useState<number>(1);
     const itemsPerPage = 5;
-    const queryClient = useQueryClient();
 
-    useEffect(() => {
-        const fetchTodos = async () => {
-            const responce = await fetch('https://jsonplaceholder.typicode.com/todos');
-            const data = await responce.json();
-            const mappedTodos: TodoItem[] = data.map((todo: any) => ({
-                id: uuidv4(),
+    const { data: todos, refetch } = useQuery<TodoItem[]>({
+        queryKey: ['todos'],
+        queryFn: async () => {
+            const response = await fetch('https://66c8103c732bf1b79fa81b5e.mockapi.io/api/v1/todos', {
+                headers: {
+                    'Cache-Control': 'no-cache',
+                },
+            });
+            const data = await response.json();
+            console.log('Data fetched from API:', data);
+            return data.map((todo: { id: number; title: string; completed: boolean }) => ({
+                id: todo.id.toString(),
                 text: todo.title,
-                completed: todo.completed
+                completed: todo.completed,
             }));
-            setTodos(mappedTodos);
-        }
-        fetchTodos();
-    }, []);
+        },
+        refetchOnWindowFocus: false,
+    });
 
     const addTodoMutation = useMutation({
         mutationFn: async (newTask: string) => {
-            const response = await fetch('https://jsonplaceholder.typicode.com/todos', {
+            const response = await fetch('https://66c8103c732bf1b79fa81b5e.mockapi.io/api/v1/todos', {
                 method: 'POST',
                 body: JSON.stringify({
+                    userId: 1,
                     title: newTask,
                     completed: false,
                 }),
@@ -53,18 +56,17 @@ function Todo() {
             });
             return response.json();
         },
-        onSuccess: (data) => {
-            const newTodo: TodoItem = {
-                id: uuidv4(),
-                text: data.title,
-                completed: data.completed,
-            };
-            setTodos((prevTodos) => [...prevTodos, newTodo]);
+        onSuccess: () => {
             setNewTodo('');
             setAddErrorMessage('');
             setFilter('all');
-            setCurrentPage(Math.ceil((todos.length + 1) / itemsPerPage));
-            queryClient.invalidateQueries({ queryKey: ['todos'] });
+            refetch().then((updatedTodos) => {
+                console.log("Refetch completed after adding a new task.");
+                if (updatedTodos.data) {
+                    const newTotalPages = Math.ceil(updatedTodos.data.length / itemsPerPage);
+                    setCurrentPage(newTotalPages);
+                }
+            });
         },
     });
 
@@ -73,20 +75,29 @@ function Todo() {
         if (newTodo.trim()) {
             addTodoMutation.mutate(newTodo);
         } else {
-            setAddErrorMessage('The field cannot be empty')
+            setAddErrorMessage('The field cannot be empty');
         }
-    }
+    };
 
-    const handleDelete = (id: string) => {
-        const updatedTodos = todos.filter(todo => todo.id !== id);
-        setTodos(updatedTodos);
-        if (currentPage > Math.ceil(updatedTodos.length / itemsPerPage)) {
-            setCurrentPage(Math.ceil(updatedTodos.length / itemsPerPage));
+    const handleDelete = async (id: string) => {
+        const response = await fetch(`https://66c8103c732bf1b79fa81b5e.mockapi.io/api/v1/todos/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (response.ok) {
+            console.log(`Task with ID ${id} deleted. Calling refetch...`);
+            await refetch();
+            console.log("Refetch completed after deleting a task.");
+        } else {
+            console.error('Failed to delete the task');
         }
     };
 
     const handleEdit = (id: string) => {
-        const todoToEdit = todos.find(todo => todo.id === id);
+        const todoToEdit = todos?.find(todo => todo.id === id);
         if (todoToEdit) {
             setEditingTodo(id);
             setEditingText(todoToEdit.text);
@@ -98,45 +109,82 @@ function Todo() {
         setEditingText(e.target.value);
     };
 
-    const handleEditSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleEditSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (editingText.trim()) {
-            const updatedTodos = todos.map(todo => (todo.id === editingTodo ? { ...todo, text: editingText } : todo));
-            setTodos(updatedTodos);
-            setEditingTodo(null);
-            setEditingText('');
-            setEditErrorMessage('');
+        if (editingText.trim() && editingTodo) {
+            const response = await fetch(`https://66c8103c732bf1b79fa81b5e.mockapi.io/api/v1/todos/${editingTodo}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id: editingTodo,
+                    title: editingText,
+                    completed: false,
+                }),
+            });
+
+            if (response.ok) {
+                console.log(`Task with ID ${editingTodo} edited. Calling refetch...`);
+                await refetch();
+                console.log("Refetch completed after editing a task.");
+                setEditingTodo(null);
+                setEditingText('');
+                setEditErrorMessage('');
+            } else {
+                console.error('Failed to edit the task');
+                setEditErrorMessage('Failed to edit the task. Please try again.');
+            }
         } else {
             setEditErrorMessage('The field cannot be empty');
         }
     };
 
-    const toggleComplete = (id: string) => {
-        const updatedTodos = todos.map(todo => (todo.id === id ? { ...todo, completed: !todo.completed } : todo));
-        setTodos(updatedTodos);
-    }
+    const toggleComplete = async (id: string) => {
+        const todoToToggle = todos?.find(todo => todo.id === id);
+        if (todoToToggle) {
+            const response = await fetch(`https://66c8103c732bf1b79fa81b5e.mockapi.io/api/v1/todos/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    title: todoToToggle.text,
+                    completed: !todoToToggle.completed,
+                }),
+            });
 
-    const filteredTodos = todos.filter(todo => {
+            if (response.ok) {
+                console.log(`Task with ID ${id} toggled. Calling refetch...`);
+                await refetch();
+                console.log("Refetch completed after toggling a task.");
+            } else {
+                console.error('Failed to toggle the task status');
+            }
+        }
+    };
+
+    const filteredTodos = todos?.filter(todo => {
         if (filter === 'completed') return todo.completed;
         if (filter === 'inProgress') return !todo.completed;
         return true;
-    })
+    }) || [];
 
     useEffect(() => {
         if (currentPage > Math.ceil(filteredTodos.length / itemsPerPage)) {
-            setCurrentPage(Math.max(1, Math.ceil(filteredTodos.length / itemsPerPage)))
+            setCurrentPage(Math.max(1, Math.ceil(filteredTodos.length / itemsPerPage)));
         }
     }, [filteredTodos, currentPage]);
 
     const indexOfLastTodo = currentPage * itemsPerPage;
     const indexOfFirstTodo = indexOfLastTodo - itemsPerPage;
-    const currentTodos = filteredTodos.slice(indexOfFirstTodo, indexOfLastTodo)
+    const currentTodos = filteredTodos.slice(indexOfFirstTodo, indexOfLastTodo);
 
     return (
         <div className="todo">
             <Filter
                 filter={filter}
-                todos={todos}
+                todos={todos || []}
                 setFilter={setFilter}
                 setCurrentPage={setCurrentPage}
             />
@@ -166,7 +214,7 @@ function Todo() {
                 />
             )}
         </div>
-    )
+    );
 }
 
 export default Todo;
