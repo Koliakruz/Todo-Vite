@@ -60,16 +60,14 @@ export const useTodos = () => {
         }
     };
 
-    const editTodo = async (id: string, text: string) => {
+    const editTodo = async (id: string, title: string) => {
         const response = await fetch(`https://66c8103c732bf1b79fa81b5e.mockapi.io/api/v1/todos/${id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                id,
-                title: text,
-                completed: false,
+                title,
             }),
         });
         if (response.ok) {
@@ -86,7 +84,7 @@ export const useTodos = () => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    ...todoToToggle,
+                    title: todoToToggle.text,
                     completed: !todoToToggle.completed,
                 }),
             });

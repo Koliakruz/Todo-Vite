@@ -4,8 +4,8 @@ import { Pagination } from "../pagination";
 import { Filter } from "../filter";
 import { TodoForm } from "../todoForm";
 import { TodoItem } from "../todoItem";
-import './todo.css';
 import { useTodos } from "../../hooks/useTodos";
+import './todo.css';
 
 const Todo: React.FC = () => {
     const [newTodo, setNewTodo] = useState<string>('');
