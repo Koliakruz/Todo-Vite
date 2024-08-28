@@ -1,5 +1,5 @@
 import React from "react";
-import './componentsStyle/filter.css'
+import './filter.css'
 
 interface FilterProps {
     filter: string;

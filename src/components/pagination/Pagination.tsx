@@ -1,5 +1,5 @@
 import React from "react";
-import './componentsStyle/pagination.css'
+import './pagination.css'
 
 interface PaginationProps {
     todosLength: number;

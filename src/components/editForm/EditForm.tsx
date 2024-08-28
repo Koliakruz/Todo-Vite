@@ -1,5 +1,5 @@
 import React, { ChangeEvent, FormEvent } from "react";
-import './componentsStyle/editForm.css'
+import './editForm.css'
 
 interface EditFormProps {
     handleEditSubmit: (e: FormEvent<HTMLFormElement>) => void;

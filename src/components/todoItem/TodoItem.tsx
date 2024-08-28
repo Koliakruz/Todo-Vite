@@ -1,25 +1,33 @@
 import React, { FC } from "react";
-import EditForm from "./EditForm";
-import './componentsStyle/todoItem.css'
+import { EditForm } from '../editForm'
+import './todoItem.css';
 
 interface TodoItemProps {
-    todo: { id: string, text: string, completed: boolean };
+    todo: { id: string; text: string; completed: boolean };
     handleEdit: (id: string) => void;
     handleDelete: (id: string) => void;
     handleEditSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
     handleEditChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    editingTodo: string | null;
+    editingTodoID: string | null;
     editingText: string;
     editErrorMessage: string;
     toggleComplete: (id: string) => void;
 }
 
-const TodoItem: FC<TodoItemProps> = ({ todo, handleEdit, handleDelete, handleEditSubmit, handleEditChange, editingTodo, editingText,
-    editErrorMessage, toggleComplete }) => {
-
+const TodoItem: FC<TodoItemProps> = ({
+    todo,
+    handleEdit,
+    handleDelete,
+    handleEditSubmit,
+    handleEditChange,
+    editingTodoID,
+    editingText,
+    editErrorMessage,
+    toggleComplete,
+}) => {
     return (
         <li className={`todo-item ${todo.completed ? 'completed' : ''}`}>
-            {editingTodo === todo.id ? (
+            {editingTodoID === todo.id ? (
                 <EditForm
                     handleEditSubmit={handleEditSubmit}
                     handleEditChange={handleEditChange}
@@ -28,7 +36,8 @@ const TodoItem: FC<TodoItemProps> = ({ todo, handleEdit, handleDelete, handleEdi
                 />
             ) : (
                 <>
-                    <input className="checkbox"
+                    <input
+                        className="checkbox"
                         type="checkbox"
                         checked={todo.completed}
                         onChange={() => toggleComplete(todo.id)}
@@ -39,7 +48,7 @@ const TodoItem: FC<TodoItemProps> = ({ todo, handleEdit, handleDelete, handleEdi
                 </>
             )}
         </li>
-    )
-}
+    );
+};
 
 export default TodoItem;
