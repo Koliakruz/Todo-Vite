@@ -42,57 +42,68 @@ export const useTodos = () => {
             return response.json();
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ["todos"]
-            });
+            queryClient.invalidateQueries({ queryKey: ["todos"] });
         },
     }).mutateAsync;
 
-    const deleteTodo = async (id: string) => {
-        const response = await fetch(`https://66c8103c732bf1b79fa81b5e.mockapi.io/api/v1/todos/${id}`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
-        if (response.ok) {
-            await refetch();
-        }
-    };
+    const deleteTodo = useMutation({
+        mutationFn: async (id: string) => {
+            const response = await fetch(`https://66c8103c732bf1b79fa81b5e.mockapi.io/api/v1/todos/${id}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            if (!response.ok) {
+                throw new Error("Failed to delete the todo");
+            }
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["todos"] });
+        },
+    }).mutateAsync;
 
-    const editTodo = async (id: string, title: string) => {
-        const response = await fetch(`https://66c8103c732bf1b79fa81b5e.mockapi.io/api/v1/todos/${id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                title,
-            }),
-        });
-        if (response.ok) {
-            await refetch();
-        }
-    };
-
-    const toggleComplete = async (id: string) => {
-        const todoToToggle = todos?.find(todo => todo.id === id);
-        if (todoToToggle) {
+    const editTodo = useMutation({
+        mutationFn: async ({ id, title }: { id: string; title: string }) => {
             const response = await fetch(`https://66c8103c732bf1b79fa81b5e.mockapi.io/api/v1/todos/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                    title: todoToToggle.text,
-                    completed: !todoToToggle.completed,
-                }),
+                body: JSON.stringify({ title }),
             });
-            if (response.ok) {
-                await refetch();
+            if (!response.ok) {
+                throw new Error("Failed to edit the todo");
             }
-        }
-    };
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["todos"] });
+        },
+    }).mutateAsync;
+
+    const toggleComplete = useMutation({
+        mutationFn: async (id: string) => {
+            const todoToToggle = todos?.find(todo => todo.id === id);
+            if (todoToToggle) {
+                const response = await fetch(`https://66c8103c732bf1b79fa81b5e.mockapi.io/api/v1/todos/${id}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        title: todoToToggle.text,
+                        completed: !todoToToggle.completed,
+                    }),
+                });
+                if (!response.ok) {
+                    throw new Error("Failed to toggle the todo");
+                }
+            }
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["todos"] });
+        },
+    }).mutateAsync;
 
     return {
         todos,

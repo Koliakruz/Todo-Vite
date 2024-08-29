@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { TodoList } from '../todoList'
 import { Pagination } from "../pagination";
 import { Filter } from "../filter";
@@ -54,7 +54,7 @@ const Todo: React.FC = () => {
     const handleEditSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (editingText.trim() && editingTodoID) {
-            editTodo(editingTodoID, editingText).then(() => {
+            editTodo({ id: editingTodoID, title: editingText }).then(() => {
                 setEditingTodoID(null);
                 setEditingText('');
                 setEditErrorMessage('');
@@ -67,11 +67,13 @@ const Todo: React.FC = () => {
         }
     };
 
-    const filteredTodos = todos?.filter(todo => {
-        if (filter === 'completed') return todo.completed;
-        if (filter === 'inProgress') return !todo.completed;
-        return true;
-    }) || [];
+    const filteredTodos = useMemo(() => {
+        return todos?.filter(todo => {
+            if (filter === 'completed') return todo.completed;
+            if (filter === 'inProgress') return !todo.completed;
+            return true;
+        }) || [];
+    }, [todos, filter]);
 
     useEffect(() => {
         if (currentPage > Math.ceil(filteredTodos.length / itemsPerPage)) {
