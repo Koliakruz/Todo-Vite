@@ -13,7 +13,6 @@ const PaginationWrapper = styled(Box)`
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    margin-top: 20px;
     justify-content: center;
 `;
 

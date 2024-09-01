@@ -1,5 +1,5 @@
 import React from "react";
-import { List } from "@mui/material";
+import styled from "styled-components";
 
 interface Todo {
     id: string;
@@ -12,11 +12,16 @@ interface TodoListProps {
     renderTodoItem: (todo: Todo) => React.ReactNode;
 }
 
+const StyledList = styled.ul`
+    margin-top: 20px;
+    padding-inline-start: 0; 
+`;
+
 const TodoList: React.FC<TodoListProps> = ({ currentTodos, renderTodoItem }) => {
     return (
-        <List>
+        <StyledList>
             {currentTodos.map(todo => renderTodoItem(todo))}
-        </List>
+        </StyledList>
     );
 };
 

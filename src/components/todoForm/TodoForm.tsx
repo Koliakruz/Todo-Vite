@@ -9,16 +9,12 @@ interface TodoFormProps {
     addErrorMessage: string;
 }
 
-const Form = styled.form`
+const StyledForm = styled.form`
     display: flex;
-    justify-content: space-between;
+    column-gap: 10px;
     align-items: center;
-    margin-bottom: 20px;
-`;
-
-const StyledButton = styled(Button)`
-    margin-left: 10px;
-    padding: 1px 6px;
+    flex: 1;
+    margin-bottom: 0;
 `;
 
 const TodoForm: FC<TodoFormProps> = ({
@@ -33,21 +29,20 @@ const TodoForm: FC<TodoFormProps> = ({
     };
 
     return (
-        <Form onSubmit={handleFormSubmit}>
+        <StyledForm onSubmit={handleFormSubmit}>
             <TextField
                 fullWidth
                 error={!!addErrorMessage}
-                helperText={addErrorMessage || ""}
-                placeholder={addErrorMessage ? "" : "Add a new task"}
+                placeholder={addErrorMessage ? addErrorMessage : "Add a new task"}
                 value={newTodo}
                 onChange={handleInputChange}
                 variant="outlined"
                 size="small"
             />
-            <StyledButton type="submit" variant="contained" color="primary">
-                Add Task
-            </StyledButton>
-        </Form>
+            <Button type="submit" variant="contained" color="primary">
+                Add
+            </Button>
+        </StyledForm>
     );
 };
 
