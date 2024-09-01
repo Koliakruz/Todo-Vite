@@ -1,11 +1,21 @@
 import React, { useState, useEffect, useMemo } from "react";
+import styled from "styled-components";
 import { TodoList } from '../todoList'
 import { Pagination } from "../pagination";
 import { Filter } from "../filter";
 import { TodoForm } from "../todoForm";
 import { TodoItem } from "../todoItem";
 import { useTodos } from "../../hooks/useTodos";
-import './todo.css';
+
+const TodoWrapper = styled.div`
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+`;
 
 const Todo: React.FC = () => {
     const [newTodo, setNewTodo] = useState<string>('');
@@ -86,7 +96,7 @@ const Todo: React.FC = () => {
     const currentTodos = filteredTodos.slice(indexOfFirstTodo, indexOfLastTodo);
 
     return (
-        <div className="todo">
+        <TodoWrapper>
             <Filter
                 filter={filter}
                 todos={todos || []}
@@ -124,7 +134,7 @@ const Todo: React.FC = () => {
                     setCurrentPage={setCurrentPage}
                 />
             )}
-        </div>
+        </TodoWrapper>
     );
 };
 

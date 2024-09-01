@@ -1,6 +1,9 @@
 import React, { FC } from "react";
-import { EditForm } from '../editForm'
-import './todoItem.css';
+import { Checkbox, IconButton, ListItem, Typography } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import styled from "styled-components";
+import { EditForm } from "../editForm";
 
 interface TodoItemProps {
     todo: { id: string; text: string; completed: boolean };
@@ -14,6 +17,22 @@ interface TodoItemProps {
     toggleComplete: (id: string) => void;
 }
 
+const StyledListItem = styled(ListItem)`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 10px;
+
+    &.completed .todo-text {
+        text-decoration: line-through;
+        color: grey;
+    }
+`;
+
 const TodoItem: FC<TodoItemProps> = ({
     todo,
     handleEdit,
@@ -26,7 +45,7 @@ const TodoItem: FC<TodoItemProps> = ({
     toggleComplete,
 }) => {
     return (
-        <li className={`todo-item ${todo.completed ? 'completed' : ''}`}>
+        <StyledListItem className={todo.completed ? 'completed' : ''}>
             {editingTodoID === todo.id ? (
                 <EditForm
                     handleEditSubmit={handleEditSubmit}
@@ -36,18 +55,23 @@ const TodoItem: FC<TodoItemProps> = ({
                 />
             ) : (
                 <>
-                    <input
-                        className="checkbox"
-                        type="checkbox"
+                    <Checkbox
                         checked={todo.completed}
                         onChange={() => toggleComplete(todo.id)}
+                        color="primary"
                     />
-                    <span className="todo-text">{todo.text}</span>
-                    <button onClick={() => handleEdit(todo.id)} className="edit-button">Edit</button>
-                    <button onClick={() => handleDelete(todo.id)} className="delete-button">Delete</button>
+                    <Typography className="todo-text" style={{ flex: 1 }}>
+                        {todo.text}
+                    </Typography>
+                    <IconButton onClick={() => handleEdit(todo.id)} color="primary">
+                        <EditIcon />
+                    </IconButton>
+                    <IconButton onClick={() => handleDelete(todo.id)} color="secondary">
+                        <DeleteIcon />
+                    </IconButton>
                 </>
             )}
-        </li>
+        </StyledListItem>
     );
 };
 

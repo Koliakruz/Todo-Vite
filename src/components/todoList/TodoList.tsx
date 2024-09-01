@@ -1,4 +1,5 @@
 import React from "react";
+import { List } from "@mui/material";
 
 interface Todo {
     id: string;
@@ -13,9 +14,9 @@ interface TodoListProps {
 
 const TodoList: React.FC<TodoListProps> = ({ currentTodos, renderTodoItem }) => {
     return (
-        <ul>
+        <List>
             {currentTodos.map(todo => renderTodoItem(todo))}
-        </ul>
+        </List>
     );
 };
 
