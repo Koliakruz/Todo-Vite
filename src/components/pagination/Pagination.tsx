@@ -1,6 +1,6 @@
 import React from "react";
-import { Box } from "@mui/material";
-import styled from "styled-components";
+import { PaginationWrapper } from "../../styledComponents/Pagination.styled";
+import { PageItem } from "../../styledComponents/Pagination.styled";
 
 interface PaginationProps {
     todosLength: number;
@@ -8,25 +8,6 @@ interface PaginationProps {
     currentPage: number;
     setCurrentPage: (page: number) => void;
 }
-
-const PaginationWrapper = styled(Box)`
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-`;
-
-const PageItem = styled(({ active, ...props }: { active: boolean } & React.ComponentProps<typeof Box>) => (
-    <Box {...props} />
-))`
-    cursor: pointer;
-    padding: 10px;
-    border: 2px solid #007bff;
-    border-radius: 4px;
-    color: ${({ active }) => (active ? "white" : "#007bff")};
-    background-color: ${({ active }) => (active ? "#007bff" : "transparent")};
-    user-select: none;
-`;
 
 const Pagination: React.FC<PaginationProps> = ({ todosLength, itemsPerPage, currentPage, setCurrentPage }) => {
     const pageNumbers: number[] = [];

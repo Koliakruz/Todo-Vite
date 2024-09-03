@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FC } from "react";
-import styled from "styled-components";
 import { TextField, Button } from "@mui/material";
+import { StyledForm } from "../../styledComponents/Form.styled";
 
 interface TodoFormProps {
     handleFormSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
@@ -8,14 +8,6 @@ interface TodoFormProps {
     newTodo: string;
     addErrorMessage: string;
 }
-
-const StyledForm = styled.form`
-    display: flex;
-    column-gap: 10px;
-    align-items: center;
-    flex: 1;
-    margin-bottom: 0;
-`;
 
 const TodoForm: FC<TodoFormProps> = ({
     handleFormSubmit,

@@ -27,9 +27,8 @@ const StyledListItem = styled(ListItem)`
     border-radius: 4px;
     margin-bottom: 10px;
 
-    &.completed .todo-text {
+    &.completed {
         text-decoration: line-through;
-        color: grey;
     }
 `;
 
@@ -60,7 +59,7 @@ const TodoItem: FC<TodoItemProps> = ({
                         onChange={() => toggleComplete(todo.id)}
                         color="primary"
                     />
-                    <Typography className="todo-text" style={{ flex: 1 }}>
+                    <Typography variant="h2" style={{ flex: 1 }}>
                         {todo.text}
                     </Typography>
                     <IconButton onClick={() => handleEdit(todo.id)} color="primary">
