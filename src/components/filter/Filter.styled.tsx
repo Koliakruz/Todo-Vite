@@ -1,4 +1,5 @@
 import { Box, Typography } from "@mui/material";
+import React from "react";
 import styled from "styled-components";
 
 export const FiltersWrapper = styled(Box)`
@@ -9,6 +10,9 @@ export const FiltersWrapper = styled(Box)`
     margin-bottom: 20px;
     padding-bottom: 20px;
 `;
+interface FilterButtonProps extends React.ComponentProps<typeof Typography> {
+    isActive: boolean;
+}
 
 interface FilterButtonProps {
     isActive: boolean;
