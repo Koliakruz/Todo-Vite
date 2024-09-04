@@ -1,9 +1,9 @@
 import React, { FC } from "react";
-import { Checkbox, IconButton, ListItem, Typography } from "@mui/material";
+import { Checkbox, IconButton, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import styled from "styled-components";
 import { EditForm } from "../editForm";
+import { StyledListItem } from "./TodoItem.styled";
 
 interface TodoItemProps {
     todo: { id: string; text: string; completed: boolean };
@@ -16,21 +16,6 @@ interface TodoItemProps {
     editErrorMessage: string;
     toggleComplete: (id: string) => void;
 }
-
-const StyledListItem = styled(ListItem)`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-bottom: 10px;
-
-    &.completed {
-        text-decoration: line-through;
-    }
-`;
 
 const TodoItem: FC<TodoItemProps> = ({
     todo,

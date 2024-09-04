@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FC } from "react";
 import { TextField, Button } from "@mui/material";
-import { StyledForm } from "../../styledComponents/Form.styled";
+import { StyledTodoForm } from "./TodoForm.styled";
 
 interface TodoFormProps {
     handleFormSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
@@ -21,7 +21,7 @@ const TodoForm: FC<TodoFormProps> = ({
     };
 
     return (
-        <StyledForm onSubmit={handleFormSubmit}>
+        <StyledTodoForm onSubmit={handleFormSubmit}>
             <TextField
                 fullWidth
                 error={!!addErrorMessage}
@@ -34,7 +34,7 @@ const TodoForm: FC<TodoFormProps> = ({
             <Button type="submit" variant="contained" color="primary">
                 Add
             </Button>
-        </StyledForm>
+        </StyledTodoForm>
     );
 };
 

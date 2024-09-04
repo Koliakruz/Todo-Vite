@@ -1,6 +1,6 @@
 import React from "react";
-import { PaginationWrapper } from "../../styledComponents/Pagination.styled";
-import { PageItem } from "../../styledComponents/Pagination.styled";
+import { PaginationWrapper } from "./Pagination.styled";
+import { PageItem } from "./Pagination.styled";
 
 interface PaginationProps {
     todosLength: number;

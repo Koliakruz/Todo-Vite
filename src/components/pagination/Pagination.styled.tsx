@@ -13,9 +13,9 @@ export const PageItem = styled(({ active, ...props }: { active: boolean } & Reac
 ))`
     cursor: pointer;
     padding: 10px;
-    border: 2px solid #007bff;
+    border: 2px solid ${({ theme }) => theme.palette.border.secondary};
     border-radius: 4px;
-    color: ${({ active }) => (active ? "white" : "#007bff")};
-    background-color: ${({ active }) => (active ? "#007bff" : "transparent")};
+    color: ${({ active, theme }) => (active ? "white" : theme.palette.border.secondary)};
+    background-color: ${({ active, theme }) => (active ? theme.palette.border.secondary : "transparent")};
     user-select: none;
 `;

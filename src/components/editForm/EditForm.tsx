@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FormEvent } from "react";
 import { TextField, Button } from "@mui/material";
-import { StyledForm } from "../../styledComponents/Form.styled";
+import { StyledEditForm } from "./EditForm.styled";
 
 interface EditFormProps {
     handleEditSubmit: (e: FormEvent<HTMLFormElement>) => void;
@@ -11,7 +11,7 @@ interface EditFormProps {
 
 const EditForm: React.FC<EditFormProps> = ({ handleEditSubmit, handleEditChange, editingText, editErrorMessage }) => {
     return (
-        <StyledForm onSubmit={handleEditSubmit}>
+        <StyledEditForm onSubmit={handleEditSubmit}>
             <TextField
                 type="text"
                 placeholder={editErrorMessage ? editErrorMessage : "Edit task"}
@@ -24,7 +24,7 @@ const EditForm: React.FC<EditFormProps> = ({ handleEditSubmit, handleEditChange,
             <Button type="submit" variant="contained" color="primary">
                 Save
             </Button>
-        </StyledForm>
+        </StyledEditForm>
     );
 };
 

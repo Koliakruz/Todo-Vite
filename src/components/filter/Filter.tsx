@@ -1,6 +1,6 @@
 import React from "react";
-import { FiltersWrapper } from "../../styledComponents/Filter.styled";
-import { FilterButton } from "../../styledComponents/Filter.styled";
+import { FiltersWrapper } from "./Filter.styled";
+import { FilterButton } from "./Filter.styled";
 
 interface FilterProps {
     filter: string;

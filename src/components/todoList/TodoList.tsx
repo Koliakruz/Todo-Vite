@@ -1,5 +1,5 @@
 import React from "react";
-import { StyledList } from "../../styledComponents/TodoList.styled";
+import { StyledList } from "./TodoList.styled";
 
 interface Todo {
     id: string;

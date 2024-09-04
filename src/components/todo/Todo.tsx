@@ -5,7 +5,7 @@ import { Filter } from "../filter";
 import { TodoForm } from "../todoForm";
 import { TodoItem } from "../todoItem";
 import { useTodos } from "../../hooks/useTodos";
-import { TodoWrapper } from "../../styledComponents/Todo.styled";
+import { TodoWrapper } from "./Todo.styled";
 
 const Todo: React.FC = () => {
     const [newTodo, setNewTodo] = useState<string>('');
