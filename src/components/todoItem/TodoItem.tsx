@@ -9,7 +9,7 @@ interface TodoItemProps {
     todo: { id: string; text: string; completed: boolean };
     handleEdit: (id: string) => void;
     handleDelete: (id: string) => void;
-    handleEditSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+    handleEditSubmit: (values: { editingText: string }) => void;
     handleEditChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     editingTodoID: string | null;
     editingText: string;
@@ -22,10 +22,8 @@ const TodoItem: FC<TodoItemProps> = ({
     handleEdit,
     handleDelete,
     handleEditSubmit,
-    handleEditChange,
     editingTodoID,
     editingText,
-    editErrorMessage,
     toggleComplete,
 }) => {
     return (
@@ -33,9 +31,7 @@ const TodoItem: FC<TodoItemProps> = ({
             {editingTodoID === todo.id ? (
                 <EditForm
                     handleEditSubmit={handleEditSubmit}
-                    handleEditChange={handleEditChange}
-                    editingText={editingText}
-                    editErrorMessage={editErrorMessage}
+                    initialText={editingText}
                 />
             ) : (
                 <>

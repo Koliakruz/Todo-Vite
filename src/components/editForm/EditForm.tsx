@@ -1,25 +1,47 @@
-import React, { ChangeEvent, FormEvent } from "react";
+import React from "react";
+import { useFormik } from "formik";
+import * as yup from "yup";
 import { TextField, Button } from "@mui/material";
 import { StyledEditForm } from "./EditForm.styled";
 
 interface EditFormProps {
-    handleEditSubmit: (e: FormEvent<HTMLFormElement>) => void;
-    handleEditChange: (e: ChangeEvent<HTMLInputElement>) => void;
-    editingText: string;
-    editErrorMessage: string;
+    handleEditSubmit: (values: { editingText: string }) => void;
+    initialText: string;
 }
 
-const EditForm: React.FC<EditFormProps> = ({ handleEditSubmit, handleEditChange, editingText, editErrorMessage }) => {
+const validationSchema = yup.object({
+    editingText: yup
+        .string()
+        .required("The field cannot be empty")
+        .min(1, "Must be at least 1 character long"),
+});
+
+const EditForm: React.FC<EditFormProps> = ({ handleEditSubmit, initialText }) => {
+    const formik = useFormik({
+        initialValues: {
+            editingText: initialText,
+        },
+        validationSchema: validationSchema,
+        onSubmit: (values) => {
+            handleEditSubmit(values);
+        },
+    });
+
     return (
-        <StyledEditForm onSubmit={handleEditSubmit}>
+        <StyledEditForm onSubmit={formik.handleSubmit}>
             <TextField
-                type="text"
-                placeholder={editErrorMessage ? editErrorMessage : "Edit task"}
-                value={editingText}
-                onChange={handleEditChange}
-                error={Boolean(editErrorMessage)}
-                variant="outlined"
                 fullWidth
+                variant="outlined"
+                id="editingText"
+                name="editingText"
+                label="Edit task"
+                value={formik.values.editingText}
+                onChange={formik.handleChange}
+                error={formik.touched.editingText && Boolean(formik.errors.editingText)}
+                placeholder={formik.touched.editingText && formik.errors.editingText ? formik.errors.editingText : "Enter task..."}
+                slotProps={{
+                    inputLabel: { shrink: true },
+                }}
             />
             <Button type="submit" variant="contained" color="primary">
                 Save

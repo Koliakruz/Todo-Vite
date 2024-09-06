@@ -8,10 +8,8 @@ import { useTodos } from "../../hooks/useTodos";
 import { TodoWrapper } from "./Todo.styled";
 
 const Todo: React.FC = () => {
-    const [newTodo, setNewTodo] = useState<string>('');
     const [editingTodoID, setEditingTodoID] = useState<string | null>(null);
     const [editingText, setEditingText] = useState<string>('');
-    const [addErrorMessage, setAddErrorMessage] = useState<string>('');
     const [editErrorMessage, setEditErrorMessage] = useState<string>('');
     const [filter, setFilter] = useState<string>('all');
     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -19,23 +17,15 @@ const Todo: React.FC = () => {
 
     const { todos, refetchTodos, addTodo, deleteTodo, editTodo, toggleComplete } = useTodos();
 
-    const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (newTodo.trim()) {
-            addTodo(newTodo).then(() => {
-                setNewTodo('');
-                setAddErrorMessage('');
-                setFilter('all');
-                refetchTodos().then((updatedTodos) => {
-                    if (updatedTodos.data) {
-                        const newTotalPages = Math.ceil(updatedTodos.data.length / itemsPerPage);
-                        setCurrentPage(newTotalPages);
-                    }
-                });
-            });
-        } else {
-            setAddErrorMessage('The field cannot be empty');
-        }
+    const handleFormSubmit = async (newTodo: string) => {
+        await addTodo(newTodo);
+        setFilter('all');
+        refetchTodos().then((updatedTodos) => {
+            if (updatedTodos.data) {
+                const newTotalPages = Math.ceil(updatedTodos.data.length / itemsPerPage);
+                setCurrentPage(newTotalPages);
+            }
+        });
     };
 
     const handleEdit = (id: string) => {
@@ -51,19 +41,19 @@ const Todo: React.FC = () => {
         setEditingText(e.target.value);
     };
 
-    const handleEditSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (editingText.trim() && editingTodoID) {
-            editTodo({ id: editingTodoID, title: editingText }).then(() => {
-                setEditingTodoID(null);
-                setEditingText('');
-                setEditErrorMessage('');
-                refetchTodos();
-            }).catch(() => {
-                setEditErrorMessage('Failed to edit the task. Please try again.');
-            });
-        } else {
-            setEditErrorMessage('The field cannot be empty');
+    const handleEditSubmit = (values: { editingText: string }) => {
+        if (editingTodoID) {
+            editTodo({
+                id: editingTodoID,
+                title: values.editingText,
+            })
+                .then(() => {
+                    setEditingTodoID(null);
+                    refetchTodos();
+                })
+                .catch(() => {
+                    setEditErrorMessage("Failed to edit the task. Please try again.");
+                });
         }
     };
 
@@ -94,10 +84,7 @@ const Todo: React.FC = () => {
                 setCurrentPage={setCurrentPage}
             />
             <TodoForm
-                setNewTodo={setNewTodo}
                 handleFormSubmit={handleFormSubmit}
-                newTodo={newTodo}
-                addErrorMessage={addErrorMessage}
             />
             <TodoList
                 currentTodos={currentTodos}

@@ -1,33 +1,44 @@
-import React, { ChangeEvent, FC } from "react";
+import React from "react";
+import { useFormik } from "formik";
 import { TextField, Button } from "@mui/material";
 import { StyledTodoForm } from "./TodoForm.styled";
+import * as Yup from "yup";
 
 interface TodoFormProps {
-    handleFormSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-    setNewTodo: (value: string) => void;
-    newTodo: string;
-    addErrorMessage: string;
+    handleFormSubmit: (newTodo: string) => Promise<void>;
 }
 
-const TodoForm: FC<TodoFormProps> = ({
-    handleFormSubmit,
-    setNewTodo,
-    newTodo,
-    addErrorMessage
-}) => {
+const TodoForm: React.FC<TodoFormProps> = ({ handleFormSubmit }) => {
+    const validationSchema = Yup.object({
+        newTodo: Yup.string()
+            .trim()
+            .required("The field cannot be empty"),
+    });
 
-    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setNewTodo(e.target.value);
-    };
+    const formik = useFormik({
+        initialValues: {
+            newTodo: "",
+        },
+        validationSchema,
+        validateOnChange: false,
+        validateOnBlur: false,
+        onSubmit: async (values, { resetForm }) => {
+            await handleFormSubmit(values.newTodo);
+            resetForm();
+        },
+    });
 
     return (
-        <StyledTodoForm onSubmit={handleFormSubmit}>
+        <StyledTodoForm onSubmit={formik.handleSubmit}>
             <TextField
                 fullWidth
-                error={!!addErrorMessage}
-                placeholder={addErrorMessage ? addErrorMessage : "Add a new task"}
-                value={newTodo}
-                onChange={handleInputChange}
+                error={Boolean(formik.errors.newTodo && formik.submitCount > 0)}
+                placeholder={
+                    formik.errors.newTodo && formik.submitCount > 0
+                        ? formik.errors.newTodo
+                        : "Add a new task"
+                }
+                {...formik.getFieldProps("newTodo")}
                 variant="outlined"
                 size="small"
             />

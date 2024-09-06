@@ -10,6 +10,7 @@ export const FiltersWrapper = styled(Box)`
     margin-bottom: 20px;
     padding-bottom: 20px;
 `;
+
 interface FilterButtonProps extends React.ComponentProps<typeof Typography> {
     isActive: boolean;
 }
