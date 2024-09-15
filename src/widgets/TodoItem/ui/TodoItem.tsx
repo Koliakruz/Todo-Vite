@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { Checkbox, IconButton, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { EditForm } from "../editForm";
+import { EditForm } from "../../../features/editForm";
 import { StyledListItem } from "./TodoItem.styled";
 
 interface TodoItemProps {

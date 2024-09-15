@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { TodoList } from '../todoList'
-import { Pagination } from "../pagination";
-import { Filter } from "../filter";
-import { TodoForm } from "../todoForm";
-import { TodoItem } from "../todoItem";
-import { useTodos } from "../../hooks/useTodos";
+import { TodoList } from '../../../widgets/TodoList'
+import { Pagination } from "../../../features/pagination";
+import { Filter } from "../../../features/filter";
+import { TodoForm } from "../../../widgets/TodoForm";
+import { TodoItem } from "../../../widgets/TodoItem";
+import { useTodos } from "../api/useTodos";
 import { TodoWrapper } from "./Todo.styled";
 
 const Todo: React.FC = () => {

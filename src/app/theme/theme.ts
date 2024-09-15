@@ -40,6 +40,7 @@ const theme = createTheme({
         }
     },
     typography: {
+        fontFamily: 'Arial, Helvetica, sans-serif',
         h1: {
             fontSize: '2rem',
             textAlign: 'center',
